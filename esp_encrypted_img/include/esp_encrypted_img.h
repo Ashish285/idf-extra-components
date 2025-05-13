@@ -50,6 +50,20 @@ extern "C" {
 #define DEPRECATED_ATTRIBUTE
 #endif
 
+#define MAGIC_SIZE          4
+#define ENC_GCM_KEY_SIZE    384
+#if defined(CONFIG_PRE_ENCRYPTED_OTA_USE_ECIES)
+#define SERVER_ECC_KEY_LEN  64
+#define KDF_SALT_SIZE       32
+#define RESERVED_SIZE       (384 - (SERVER_ECC_KEY_LEN + KDF_SALT_SIZE))
+#endif /* CONFIG_PRE_ENCRYPTED_OTA_USE_ECIES */
+#define IV_SIZE             16
+#define AUTH_SIZE           16
+#define BIN_SIZE_DATA       4
+#define RESERVED_HEADER     88
+
+#define ESP_ERR_ENCRYPTED_IMAGE_HMAC_KEY_NOT_FOUND 1
+
 typedef void *esp_decrypt_handle_t;
 
 typedef struct {
