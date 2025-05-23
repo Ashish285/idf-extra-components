@@ -1,4 +1,5 @@
 dependencies:
   espressif/esp_encrypted_img:
-    version: "*"
-    override_path: "../.."
+    version: '*'
+    override_path: ../..
+  espressif/esp_secure_cert_mgr: '*'
