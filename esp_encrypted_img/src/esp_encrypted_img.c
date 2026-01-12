@@ -40,11 +40,9 @@
 
 #if defined(CONFIG_PRE_ENCRYPTED_RSA_USE_DS)
 #if defined(CONFIG_MBEDTLS_VER_4_X_SUPPORT)
-#if __has_include("psa_crypto_driver_esp_ds.h")
-#include "psa_crypto_driver_esp_ds.h"
-#else
-#error "DS Peripheral is not supported on this version of ESP-IDF"
-#endif /* __has_include("psa_crypto_driver_esp_ds.h") */
+#if __has_include("psa_crypto_driver_esp_rsa_ds.h")
+#include "psa_crypto_driver_esp_rsa_ds.h"
+#endif /* __has_include("psa_crypto_driver_esp_rsa_ds.h") */
 #else
 #if __has_include("rsa_dec_alt.h")
 #include "rsa_dec_alt.h"
@@ -237,7 +235,7 @@ static int decipher_gcm_key(const char *enc_gcm, esp_encrypted_img_t *handle)
     psa_set_key_bits(&attributes, ds_key->rsa_length_bits);
     psa_set_key_usage_flags(&attributes, PSA_KEY_USAGE_DECRYPT);
     psa_set_key_algorithm(&attributes, alg);
-    psa_set_key_lifetime(&attributes, PSA_KEY_LIFETIME_ESP_DS);
+    psa_set_key_lifetime(&attributes, PSA_KEY_LIFETIME_ESP_RSA_DS);
     status = psa_import_key(&attributes,
                             (const uint8_t *)ds_key,
                             sizeof(*ds_key),
@@ -247,7 +245,6 @@ static int decipher_gcm_key(const char *enc_gcm, esp_encrypted_img_t *handle)
         ESP_LOGE(TAG, "psa_import_key failed: %d", (int)status);
         return ESP_FAIL;
     }
-
     size_t olen = 0;
     status = psa_asymmetric_decrypt(rsa_key_id, alg, (const unsigned char *)enc_gcm,
                                     ENC_GCM_KEY_SIZE, NULL, 0,
